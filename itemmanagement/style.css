@@ -1,0 +1,69 @@
+.table {
+    text-align: center;
+    vertical-align: middle;
+}
+
+col:nth-child(1) { /* 이름 */
+    width: 40%;
+}
+
+col:nth-child(2) { /* 만료날짜 */
+    width: 10%;
+}
+
+col:nth-child(3) { /* 남은시간 */
+    width: 10%;
+}
+
+col:nth-child(4) { /* 삭제 */
+    width: 10%;
+}
+
+.name_zone {
+    width: 60%;
+}
+
+.date_zone {
+    width: 15%;
+}
+
+.time_zone {
+    width: 15%;
+}
+
+.remaining_time {
+    word-break: keep-all;
+}
+
+.delete_zone {
+    width: 10%;
+    color: red;
+}
+
+@media (max-width: 480px) {
+    .table {
+        font-size: 0.825rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .table {
+        font-size: 0.725rem;
+    }
+
+    col:nth-child(1) { /* 이름 */
+        width: 35%;
+    }
+    
+    col:nth-child(2) { /* 만료날짜 */
+        width: 10%;
+    }
+    
+    col:nth-child(3) { /* 남은시간 */
+        width: 20%;
+    }
+    
+    col:nth-child(4) { /* 삭제 */
+        width: 1%;
+    }
+}

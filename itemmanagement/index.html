@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>기간제 아이템 관리</title>
+    <!-- jQuery cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- jQuery ui cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"
+        integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- jQurey ui css cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css"
+        integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/js/bootstrap.min.js"
+        integrity="sha512-8Y8eGK92dzouwpROIppwr+0kPauu0qqtnzZZNEF8Pat5tuRNJxJXCkbQfJ0HlUG3y1HB3z18CSKmUo7i2zcPpg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css"
+        integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- javascript -->
+    <script src="/common/common.js"></script>
+    <script src="script.js"></script>
+    <!-- css -->
+    <link href="/common/common.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<style>
+
+</style>
+
+<body>
+    <header></header>
+    <main>
+        <div class="container">
+            <div class="row m-3 text-center justify-content-center align-items-center">
+                <label class="col-4 col-lg-2">아이템이름</label><input type="text" class="col-7 col-lg-2 m-2" id="name" />
+                <label class="col-4 col-lg-1">만료날짜</label><input type="text" class="col-7 col-lg-2 m-2" id="datepicker" />
+                <label class="col-4 col-lg-1">만료시각</label><input type="number" class="col-7 col-lg-2 m-2" id="time"
+                    inputmode="numeric" maxlength="4" placeholder="ex) 1221" />
+                <button id="btn_regist" class="col-12 col-lg-1 btn btn-primary btn-sm">등록</button>
+            </div>
+            <hr>
+            <table class="table w-100">
+                <colgroup>
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>만료날짜</th>
+                        <th>남은시간</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <footer class="py-5 bg-dark"></footer>
+    <script>
+
+    </script>
+</body>
+
+</html>
