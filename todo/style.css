@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&display=swap');
+
+/* 메뉴 */
+#btn-help,
+#option+label {
+    font-size: 1.5rem;
+}
+
+#option[type="checkbox"] {
+    display: none;
+}
+
+#option[type="checkbox"]+label {
+    cursor: pointer;
+}
+
+.btn-style-remove {
+    font-size: 1.5rem;
+    border: 0;
+    background: none;
+}
+
+.btn-style-remove > i{
+    color: black;
+}
+
+/* 선택된 캐릭터 */
+.character-select {
+    background-color: rgba(248, 244, 240, 1);
+    height: 4rem;
+    border-radius: 0.5rem;
+}
+
+.character-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 58px;
+    height: auto;
+    border: 0;
+}
+
+.dividingLine-left {
+    padding-left: calc(1.5rem * 0.5);
+    border-left: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+.character-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.character-info {
+    font-size: 0.75rem;
+}
+
+.character-list {
+    height: 4rem;
+    background-color: rgba(248, 244, 240, 1);
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+/* todo header */
+.content-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+}
+
+.progress-bar {
+    background-color: rgb(255, 187, 42);
+    width: 0%;
+}
+
+/* todo body */
+.content-body {
+    height: 4rem;
+    cursor: pointer;
+    border-radius: 0.75rem;
+}
+
+.content-body > div > div:not(.end-date) {
+    font-family: 'Do Hyeon', sans-serif;
+    font-weight: bold;
+}
+
+.content-body > div > img {
+    width: 34px;
+    height: auto;
+}
+
+.end-date {
+    font-size: 0.6rem;
+}
+
+.clear > div:not(.end-date) {
+    text-decoration-line: line-through;
+    color: gray;
+}
+
+.circle-red {
+    display: inline-block;
+    background-color: rgb(255, 80, 42);
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 1.1rem;
+}
+
+.circle-green {
+    display: inline-block;
+    background-color: rgb(111, 255, 42);
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 1.1rem;
+}
+
+.coming-soon {
+    cursor: default;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    font-style: italic;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -100%);
+    z-index: 2;
+}
+
+.coming-soon-timer {
+    font-size: 1.4rem;
+    font-weight: 700;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -40%);
+    z-index: 2;
+}
+
+.coming-soon-blur {
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+}
+
+@media (max-width: 992px) {
+    .todo-cnt {
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .coming-soon {
+        font-size: 1.4rem;
+    }
+    
+    .coming-soon-timer {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .coming-soon {
+        font-size: 1.3rem;
+    }
+    
+    .coming-soon-timer {
+        font-size: 1.2rem;
+    }
+}
+
+
+

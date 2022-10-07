@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>메할일</title>
+
+    <!-- jQuery cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- jQuery ui cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"
+        integrity="sha512-57oZ/vW8ANMjR/KQ6Be9v/+/h6bq9/l3f0Oc7vn6qMqyhvPd1cvKBRWWpzu0QoneImqr2SkmO4MSqU+RpHom3Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- jQurey ui css cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css"
+        integrity="sha512-ELV+xyi8IhEApPS/pSj66+Jiw+sOT1Mqkzlh8ExXihe4zfqbWkxPRi8wptXIO9g73FSlhmquFlUOuMSoXz5IRw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/js/bootstrap.min.js"
+        integrity="sha512-8Y8eGK92dzouwpROIppwr+0kPauu0qqtnzZZNEF8Pat5tuRNJxJXCkbQfJ0HlUG3y1HB3z18CSKmUo7i2zcPpg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css"
+        integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- lodash -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
+        integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- javascript -->
+    <script src="/common/common.js"></script>
+    <script src="script.js" type="module"></script>
+    <!-- css -->
+    <link href="/common/common.css" rel="stylesheet">
+    <link href="/common/toggle-switchy.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <header></header>
+    <main>
+        <!-- characterAdd modal -->
+        <div class="modal fade" id="modal-characterAdd" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">캐릭터 추가</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="other-char" class="w-100 p-3" placeholder="닉네임 입력">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" id="btn-modal-other" class="btn btn-primary">추가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- characterList modal -->
+        <div class="modal fade" id="modal-characterList" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">캐릭터 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row g-0"><div class="col-12 text-center">저장된 캐릭터가 없습니다.</div></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- main -->
+        <div class="container position-relative">
+            <div class="text-center pt-3">
+                <div class="row align-items-center justify-content-center justify-content-lg-end">
+                    <div class="col-3 col-lg-1 g-0"><button id="btn-character-add" class="btn-style-remove p-0"><i class="fa-solid fa-user-plus"></i></button></div>
+                    <div class="col-3 col-lg-1 g-0"><button id="btn-character-change" class="btn-style-remove p-0"><i class="fa-solid fa-people-arrows"></i></button></div>
+                    <div class="col-3 col-lg-1 g-0"><button id="btn-help" class="btn-style-remove p-0"><i class="fa-solid fa-circle-question"></i></button></div>
+                    <div class="col-3 col-lg-1 g-0"><input id="option" type="checkbox" class="p-0"></input><label for="option"><i class="fa-solid fa-gear"></i></label></div></div>
+                    <div class="row align-items-center text-start mt-2 py-1 character-select">
+                        <div class="text-center col-3 col-lg-1 form-floating">
+                            <img class="character-img" />
+                        </div>
+                        <div class="col-7 col-lg-10 g-0">
+                            <div class="dividingLine-left">
+                                <div class="character-name">&nbsp;</div>
+                                <div class="character-info">&nbsp;</div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="row justify-content-center justify-content-lg-start">
+                <div class="content-header p-3 py-2 my-3 col-12" id="specialReward-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">특별 보상</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="specialReward-body" class="row g-0"></div>
+                <div class="content-header p-3 py-2 my-3 col-12" id="dailyEvent-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">일일 이벤트</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="dailyEvent-body" class="row g-0"></div>
+                <div class="content-header p-3 py-2 my-3 col-12" id="weeklyEvent-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">주간 이벤트</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="weeklyEvent-body" class="row g-0"></div>
+                <div class="content-header p-3 py-2 my-3 col-12" id="dailyContent-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">일일 컨텐츠</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="dailyContent-body" class="row g-0"></div>
+                <div class="content-header p-3 py-2 my-3 col-12" id="dailyBoss-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">일일 보스</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="dailyBoss-body" class="row g-0"></div>
+                <div class="content-header p-3 py-2 my-3 col-12" id="dailySymbol-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">심볼</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="dailySymbol-body" class="row g-0"></div>
+                <div class="content-header p-3 py-2 my-3 col-12" id="weeklyContent-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">주간 컨텐츠</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="weeklyContent-body" class="row g-0"></div>
+                <div class="content-header p-3 py-2 my-3 col-12" id="weeklyBoss-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">주간 보스</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="weeklyBoss-body" class="row g-0"></div>
+                <div class="content-header p-3 py-2 my-3 col-12" id="monthlyBoss-header">
+                    <div class="row align-items-center">
+                        <div class="col-4 col-lg-2 g-0">월간 보스</div>
+                        <div class="col-2 col-lg-1 g-0 text-center todo-cnt"></div>
+                        <div class="col-6 col-lg-9">
+                            <div class="progress">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="monthlyBoss-body" class="row g-0"></div>
+            </div>
+        </div>
+    </main>
+    <footer class="py-5 bg-dark"></footer>
+</body>
+
+</html>
