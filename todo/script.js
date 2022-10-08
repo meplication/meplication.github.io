@@ -204,6 +204,10 @@ $(document).on("click", ".character-list", function () {
   }
 });
 
+$(document).on("click", "#btn-help", function () {
+  $("#modal-help").modal("show");
+});
+
 function setPrograss(target) {
   let $progress = $("#" + target + "-header").find(".progress-bar");
   let clearCnt = $("#" + target + "-body").children().find(".clear").length, 
