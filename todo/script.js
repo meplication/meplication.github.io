@@ -22,8 +22,14 @@ $(function () {
                 i[j][k]["isClear"] = 0;
               }
             }
-          } else if (j.indexOf("weekly") < 0 ? false : true) {
-            if (now.getDate() === 4) {
+          } else if (j.indexOf("weekly") < 0 ? false : true && j !== "weeklyContent") {
+            if (now.getDay() === 4) {
+              for (let k in i[j]) {
+                i[j][k]["isClear"] = 0;
+              }
+            }
+          } else if (j === "weeklyContent") {
+            if (now.getDay() === 1) {
               for (let k in i[j]) {
                 i[j][k]["isClear"] = 0;
               }
@@ -210,11 +216,13 @@ $(document).on("click", "#btn-help", function () {
 
 function setPrograss(target) {
   let $progress = $("#" + target + "-header").find(".progress-bar");
-  let clearCnt = $("#" + target + "-body").children().find(".clear").length, 
-    maxCnt = $("#" + target + "-body").children().length,
-    lockCnt = $("#" + target + "-body").children().find(".coming-soon").length;
-
-  $progress.css("width", (clearCnt / (maxCnt - lockCnt)) * 100 + "%");
+  let clearCnt = parseInt($("#" + target + "-body").children().find(".clear").length), 
+    maxCnt = parseInt($("#" + target + "-body").children().length),
+    lockCnt = parseInt($("#" + target + "-body").children().find(".coming-soon").length);
+  let value = parseInt((clearCnt / (maxCnt - lockCnt)) * 100);
+  
+  value = value ? value : 0;
+  $progress.css("width", value + "%");
 }
 
 function setCnt(target) {
