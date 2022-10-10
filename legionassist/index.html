@@ -28,6 +28,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css"
         integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- lodash -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
         integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
@@ -180,26 +184,31 @@
         <div id="step-2" class="container py-3">
             <div class="div-sticky">
                 <!-- 버튼 -->
-                <div class="div-command">
-                    <div class="div-button">
-                        <button id="btn-mapleM" class="btn btn-outline-primary">메이플M 캐릭 추가</button>
-                    </div>
-                    <div class="div-button">
-                        <button id="btn-add" class="btn btn-outline-primary">캐릭터 추가</button>
-                    </div>
-                    <div class="div-button">
-                        <button id="btn-script" class="btn btn-outline-warning">코드 생성</button>
-                    </div>
-                    <div class="div-button">
-                        <button id="btn-preset" class="btn btn-outline-primary">프리셋 저장</button>
-                    </div>
-                    <div class="div-button">
-                        프리셋
-                        <button id="btn-preset-1" class="btn btn-outline-primary btn-sm" disabled>1</button>
-                        <button id="btn-preset-2" class="btn btn-outline-primary btn-sm" disabled>2</button>
-                        <button id="btn-preset-3" class="btn btn-outline-primary btn-sm" disabled>3</button>
-                        <button id="btn-preset-4" class="btn btn-outline-primary btn-sm" disabled>4</button>
-                        <button id="btn-preset-5" class="btn btn-outline-primary btn-sm" disabled>5</button>
+                <div class="m-2">
+                    <div class="row text-center g-0">
+                        <div class="col-2">
+                            <button id="btn-mapleM" class="btn btn-outline-primary btn-sm">메이플M 캐릭 추가</button>
+                        </div>
+                        <div class="col-2">
+                            <button id="btn-add" class="btn btn-outline-primary btn-sm">캐릭터 추가</button>
+                        </div>
+                        <div class="col-1">
+                            <button id="btn-sync" class="btn btn-outline-primary btn-sm">갱신</button>
+                        </div>
+                        <div class="col-2">
+                            <button id="btn-script" class="btn btn-outline-warning btn-sm">코드 생성</button>
+                        </div>
+                        <div class="col-2">
+                            <button id="btn-preset" class="btn btn-outline-primary btn-sm">프리셋 저장</button>
+                        </div>
+                        <div class="col-3">
+                            프리셋
+                            <button id="btn-preset-1" class="btn btn-outline-primary btn-sm" disabled>1</button>
+                            <button id="btn-preset-2" class="btn btn-outline-primary btn-sm" disabled>2</button>
+                            <button id="btn-preset-3" class="btn btn-outline-primary btn-sm" disabled>3</button>
+                            <button id="btn-preset-4" class="btn btn-outline-primary btn-sm" disabled>4</button>
+                            <button id="btn-preset-5" class="btn btn-outline-primary btn-sm" disabled>5</button>
+                        </div>
                     </div>
                 </div>
                 <!-- 각종 정보 -->

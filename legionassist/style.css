@@ -63,23 +63,6 @@ textarea {
 }
 
 /* div-command */
-.div-command {
-    position: relative;
-    left: -1rem;
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    padding: 0.3rem;
-    margin: 0.3rem;
-    text-align: center;
-}
-
-.div-button {
-    padding-left: 0.3rem;
-    padding-right: 0.3rem;
-    display: table-cell;
-}
-
 [data-tooltip]:hover {
     position: relative;
 }
@@ -117,6 +100,7 @@ textarea {
     display: flex;
     flex-direction: column;
     height: 190px;
+    pointer-events: none;
 }
 
 #union-symbol {
@@ -164,6 +148,13 @@ textarea {
     text-align: center;
     color: white;
     margin: 0.3rem 0;
+    cursor: default;
+}
+
+.refresh {
+    position: absolute;
+    top: 0.25rem;
+    left: calc(100% - 1.5rem);
     cursor: pointer;
 }
 

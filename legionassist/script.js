@@ -334,6 +334,20 @@ $(document).on("click", ".char-card", function () {
   localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
 });
 
+$(document).on("click", "#btn-sync", function () {
+  let a = []
+
+  for (let i of localStorageObj["character"]) a.push(i.name);
+  setSync(a, $elements = $(".char-card"));
+});
+
+$(document).on("click", ".refresh", function (e) {
+  let name = $(this).parent().data("name");
+
+  setSync(name, $(this).parent());
+  e.stopPropagation();
+});
+
 // 초기설정
 function init() {
   localStorageObj = JSON.parse(localStorage.getItem("legionAssist"));
@@ -446,17 +460,13 @@ function init() {
 }
 
 function ajaxChar(arr) {
-  let interval =
-    (parseInt(arr.length / 3) * 0.55 + parseInt(arr.length / 3) + 2) * 1000;
-
   $.ajax({
-    url: "https://meplication.koreacentral.cloudapp.azure.com/union",
-    data: JSON.stringify({ name: arr }),
+    url: "https://meplication.koreacentral.cloudapp.azure.com/getUnion",
+    data: JSON.stringify({ characters: arr }),
     method: "POST",
     contentType: "application/json",
     dataType: "json",
     async: true,
-    timeout: interval,
     success: function (data) {
       try {
         let characterList = [];
@@ -556,6 +566,7 @@ function createCard(res, arg1, arg2) {
       return (
         content +
         `
+                <div class="refresh"><i class="fa-solid fa-rotate"></i></div>
                 <div class="card-title">
                     <img src="./img/mapleM.png">
                     <h5><b>메이플스토리M</b></h5>
@@ -574,6 +585,7 @@ function createCard(res, arg1, arg2) {
       return `
         <div class="col-md-2">
             <div class="char-card selected" data-name="${res["name"]}" data-class="${res["class"]}" data-rank="${res["rank"]}" data-stat="${res["stat"]}" data-value="${res["value"]}">
+                <div class="refresh"><i class="fa-solid fa-rotate"></i></div>
                 <div class="card-title">
                     <img src="${res["avatarImg"]}">
                     <h5><b>${res["name"]}</b></h5>
@@ -591,6 +603,7 @@ function createCard(res, arg1, arg2) {
       return `
         <div class="col-md-2">
             <div class="char-card draw-border" data-name="${res["name"]}" data-class="${res["class"]}" data-rank="${res["rank"]}" data-stat="${res["stat"]}" data-value="${res["value"]}">
+                <div class="refresh"><i class="fa-solid fa-rotate"></i></div>  
                 <div class="card-title">
                     <img src="${res["avatarImg"]}">
                     <h5><b>${res["name"]}</b></h5>
@@ -740,4 +753,107 @@ function setPreset(data) {
 
   $("#union-cnt").html(`<b>${union["cnt"]} / ${union["members"]}</b>`);
   localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
+}
+
+function setSync(nameList, $elements) {
+  $elements.each(function () {
+    $(this).children().first().addClass("fa-spin");
+  });
+  new Promise((succ, fail)=>{
+    $.ajax({
+      url: "https://meplication.koreacentral.cloudapp.azure.com/getCharacterSync",
+      data: JSON.stringify({ name: nameList }),
+      method: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      success: function(result) {
+        succ(result);
+      },
+      fail: function(result) {
+          console.log(result.responseText);
+          fail(error); 
+      }
+    });
+  }).then((arg) =>{
+    $.ajax({
+      url: "https://meplication.koreacentral.cloudapp.azure.com/getUnion",
+      data: JSON.stringify({ characters: arg["success"] }),
+      method: "POST",
+      contentType: "application/json",
+      dataType: "json",
+      success: function(result2) {
+        console.log(arg);
+        inputUpdateCharacter(arg["success"], result2);
+        setSort();
+        // for (let i in arg["success"]) {
+        //   let idx = localStorageObj["character"].findIndex((x) => x.name === arg["success"][i]);
+
+        //   localStorageObj["character"][idx] = _.cloneDeep(result2["charInfo"][i]);
+        // }
+        $elements.each(function () {
+          let name = $(this).data("name");
+
+          $(this).children().first().removeClass("fa-spin");
+          if (arg["success"].find((x) => x === name)) $(this).children().first().css("color", "green");
+          else if (arg["fail"].find((x) => x === name)) $(this).children().first().css("color", "red");
+          console.log($(this).children().first());
+        });
+        localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
+        $(".div-character > .row").html("");
+        createCardN();
+        // location.reload();
+      }                                               
+    });
+  });
+}
+
+function createCardN() {
+  if (localStorageObj.currentPreset === -1) {
+    for (let i of localStorageObj["character"]) {
+      if (i["stat"] == "ATT") {
+        if (i["selected"])
+          $(".div-character > .row").append(createCard(i, "mapleM", 1));
+        else $(".div-character > .row").append(createCard(i, "mapleM"));
+      } else {
+        if (i["selected"])
+          $(".div-character > .row").append(createCard(i, "selected"));
+        else $(".div-character > .row").append(createCard(i));
+      }
+    }
+  } else if (localStorageObj.currentPreset !== -1) {
+    for (let i of localStorageObj["preset"][localStorageObj.currentPreset]["character"]) {
+      if (i["stat"] == "ATT") {
+        if (i["selected"])
+          $(".div-character > .row").append(createCard(i, "mapleM", 1));
+        else $(".div-character > .row").append(createCard(i, "mapleM"));
+      } else {
+        if (i["selected"])
+          $(".div-character > .row").append(createCard(i, "selected"));
+        else $(".div-character > .row").append(createCard(i));
+      }
+    }
+  }
+}
+
+function inputUpdateCharacter (successList, data) {
+  for (let i in successList) {
+    let idx = localStorageObj["character"].findIndex((x) => x.name === successList[i]);
+
+    localStorageObj["character"][idx] = _.cloneDeep(data["charInfo"][i]);
+  }
+
+  if (localStorageObj.currentPreset !== -1)
+    localStorageObj["preset"][localStorageObj.currentPreset]["character"] = _.cloneDeep(localStorageObj["character"]);
+}
+
+function setSort(){
+  let characters = _.cloneDeep(localStorageObj["character"]),
+    sortedCharacters;
+
+  sortedCharacters = characters.sort(function (a, b) {
+    return b.level - a.level;
+  })
+
+  localStorageObj["character"] = _.cloneDeep(sortedCharacters);
+  console.log(localStorageObj);
 }
