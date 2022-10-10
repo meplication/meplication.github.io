@@ -348,6 +348,13 @@ $(document).on("click", ".refresh", function (e) {
   e.stopPropagation();
 });
 
+$(document).on("click", "#btn-reset", function () {
+  localStorageObj = {};
+  localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
+  location.reload();
+  alert("초기화 되었습니다.")
+})
+
 // 초기설정
 function init() {
   localStorageObj = JSON.parse(localStorage.getItem("legionAssist"));
