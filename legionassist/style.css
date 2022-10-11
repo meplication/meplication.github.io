@@ -37,7 +37,11 @@
 
 /*  */
 #L > ol > li > div > img{
-    width: 70%;
+    width: 80%;
+}
+
+#L > ul > li > div > img{
+    width: 80%;
 }
 
 #input {
@@ -150,20 +154,18 @@ textarea {
     margin: 0.3rem 0;
     cursor: default;
 }
+.refresh, .delete {
+    border: 0;
+    background: none;
+    color: white;
+}
 
-.refresh {
-    position: absolute;
-    top: 0.25rem;
-    left: calc(100% - 1.5rem);
+.refresh > i, .delete > i {
     cursor: pointer;
 }
 
 .col-md-4 {
     padding-bottom: calc(var(--bs-gutter-x) * .2);
-}
-
-.card-title {
-    padding: 0.625rem;
 }
 
 .card-content ul {

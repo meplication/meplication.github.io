@@ -31,7 +31,9 @@ var union = {
     i18n: "KMS",
     pieceAmounts: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   },
-  localStorageObj;
+  localStorageObj,
+  syncCharacters = [],
+  syncInterval = 20;
 
 $(function () {
   // 모바일접속 확인
@@ -124,15 +126,20 @@ $(document).on("click", "#btn-mapleM", function () {
 });
 
 $(document).on("click", "#btn-modal-mapleM", function () {
+  if ($(".div-character > .row").find(".mapleM").length) {
+    alert("이미 추가되어있습니다.");
+    $("#mapleM-level").val("");
+    $("#mapleM-Modal").modal("hide");
+    return;
+  }
   let characterObj = {
     class: "mapleM",
     stat: "ATT",
     level: $("#mapleM-level").val(),
-    rank: "",
     value: 0,
-    effect: "",
     selected: 0,
   };
+  let character = _.cloneDeep(localStorageObj["character"]);
 
   if (characterObj["level"] >= 120) {
     characterObj["rank"] = "SS";
@@ -154,10 +161,8 @@ $(document).on("click", "#btn-modal-mapleM", function () {
   characterObj["effect"] =
     "공격력/마력" + " " + characterObj["value"] + " " + "증가";
 
-  let character = _.cloneDeep(localStorageObj["character"]);
-
   character.push(characterObj);
-  localStorageObj["character"] = character;
+  localStorageObj["character"] = _.cloneDeep(character);
   localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
 
   $(".div-character > .row").append(createCard(characterObj, "mapleM"));
@@ -248,6 +253,9 @@ $(document).on("click", "#btn-script", function () {
   document.execCommand("copy");
   document.body.removeChild(t);
   alert("복사했습니다.");
+  if(confirm("LegionSolver로 이동하시겠습니까?")) {
+    window.open("https://xenogents.github.io/LegionSolver/");
+  }
 });
 
 // FIXME: LegionSolver 정상적으로 안됌
@@ -277,11 +285,7 @@ $(document).on("click", ".char-card", function () {
     rank = $(this).data("rank"),
     stat = $(this).data("stat").split(","),
     value = Number($(this).data("value"));
-  let $unionStats = [],
-    character = _.cloneDeep(localStorageObj["character"]);
-  for (let i in stat) {
-    $unionStats[i] = $(`#${stat[i]}`).parents().eq(0);
-  }
+  let character = _.cloneDeep(localStorageObj["character"]);
 
   $("[id*=btn-preset-]").each(function () {
     if ($(this).hasClass("btn-primary")) {
@@ -313,15 +317,17 @@ $(document).on("click", ".char-card", function () {
   else $(this).toggleClass("selected");
   $(this).toggleClass("draw-border");
 
-  if ($(this).hasClass("selected") || $(this).hasClass("selected-mapleM")) {
-    for (let i of character) {
-      if (i["name"] == name || i["stat"] == "ATT") i["selected"] = 1;
-    }
+  if($(this).hasClass("selected")) {
+    for (let i of character) if(i["name"] === name) i["selected"] = 1;
   } else {
-    for (let i of character) {
-      if (i["name"] == name || i["stat"] == "ATT") i["selected"] = 0;
-    }
+    for (let i of character) if(i["name"] === name) i["selected"] = 0;
   }
+  if($(this).hasClass("selected-mapleM")) {
+    for (let i of character) if(i["class"] == "mapleM") i["selected"] = 1;
+  } else {
+    for (let i of character) if(i["class"] == "mapleM") i["selected"] = 0;
+  }
+
   union["cnt"] = $(".selected").length;
   $("#union-cnt").html(`<b>${union["cnt"]} / ${union["members"]}</b>`);
 
@@ -335,16 +341,31 @@ $(document).on("click", ".char-card", function () {
 });
 
 $(document).on("click", "#btn-sync", function () {
-  let a = []
+  let nameList = [],
+    diffList;
 
-  for (let i of localStorageObj["character"]) a.push(i.name);
-  setSync(a, $elements = $(".char-card"));
+  for (let i of localStorageObj["character"]) nameList.push(i.name);
+  diffList = nameList.filter((x) => !syncCharacters.includes(x));
+  diffList = diffList.filter((x) => x !== undefined);
+  setSync(diffList, $(".refresh").parent());
+  setSyncDisable();
 });
 
 $(document).on("click", ".refresh", function (e) {
-  let name = $(this).parent().data("name");
+  let name = $(this).parents().eq(1).data("name");
+  
+  if (syncCharacters.find((x) => x === name) ? false : true) {
+    setRefreshDisalbe($(this));
+    setSync(name, $(this).parent());
+  }
+  e.stopPropagation();
+});
 
-  setSync(name, $(this).parent());
+$(document).on("click", ".delete", function (e) {
+  let name = $(this).parents().eq(1).data("name");
+  let $element = $(this).parents().eq(2);
+
+  removeCard($element, name);
   e.stopPropagation();
 });
 
@@ -366,13 +387,29 @@ function init() {
     $("#step-2").hide();
   } else {
     let currentPreset = localStorageObj["currentPreset"],
-      tmpUnion = _.cloneDeep(localStorageObj["union"]),
-      tmpCharacter = _.cloneDeep(localStorageObj["character"]),
-      tmpStats = _.cloneDeep(localStorageObj["stats"]),
-      tmpLegionSolver = _.cloneDeep(localStorageObj["legionSolver"]),
-      tmpPreset = _.cloneDeep(localStorageObj["preset"]);
-    let $statsElement = $("#div-union-stats").children().children(),
+      storageCharacter,
+      storageUnion,
+      storageStats,
+      storageLegionSolver,
+      storagePreset,
+      $statsElement = $("#div-union-stats").children().children(),
       $presetBtnElement = $("[id*=btn-preset-]");
+
+    if (currentPreset > 0) {
+      storageCharacter = _.cloneDeep(localStorageObj["preset"][currentPreset]["character"]);
+      storageUnion = _.cloneDeep(localStorageObj["preset"][currentPreset]["union"]);
+      storageStats = _.cloneDeep(localStorageObj["preset"][currentPreset]["stats"]);
+      storageLegionSolver = _.cloneDeep(localStorageObj["preset"][currentPreset]["legionSolver"]);
+    } else {
+      if (isKeyExist(localStorageObj, "character")) storageCharacter = _.cloneDeep(localStorageObj["character"]);
+      if (isKeyExist(localStorageObj, "union")) storageUnion = _.cloneDeep(localStorageObj["union"]);
+      if (isKeyExist(localStorageObj, "stats")) storageStats = _.cloneDeep(localStorageObj["stats"]);
+      if (isKeyExist(localStorageObj, "legionSolver")) storageLegionSolver = _.cloneDeep(localStorageObj["legionSolver"]);
+      
+    }
+    if (isKeyExist(localStorageObj, "preset")) storagePreset = _.cloneDeep(localStorageObj["preset"]);
+
+    if(!storageCharacter) $("#step-2").hide();
 
     // currentPreset
     if (currentPreset !== -1) {
@@ -381,86 +418,49 @@ function init() {
     }
 
     // stats
-    if (currentPreset > 0) {
-      if (!$.isEmptyObject(tmpPreset[currentPreset]["stats"])) {
-        unionEffect = tmpPreset[currentPreset]["stats"];
-        $statsElement.each(function () {
-          let $stat = $(this).children().eq(1);
-
-          $stat.text(unionEffect[$stat.attr("id")]);
-        });
-      }
-    } else {
-      if (!$.isEmptyObject(tmpStats)) {
-        unionEffect = tmpStats;
-        $statsElement.each(function () {
-          let $stat = $(this).children().eq(1);
-
-          $stat.text(unionEffect[$stat.attr("id")]);
-        });
-      }
+    if(storageStats) {
+      unionEffect = _.cloneDeep(storageStats);
+      $statsElement.each(function () {
+        let $stat = $(this).children().eq(1);
+  
+        $stat.text(unionEffect[$stat.attr("id")]);
+      });
     }
 
     // union
-    if (!$.isEmptyObject(tmpUnion)) {
-      if (currentPreset === -1) union = tmpUnion;
-      else union = tmpPreset[currentPreset]["union"];
-    }
+    if (storageUnion) union = storageUnion;
 
     // preset
-    if (!$.isEmptyObject(tmpPreset)) {
+    if (storagePreset) {
       $(".input-explain").each(function (idx) {
-        if (tmpPreset[idx + 1]) {
-          $(this).val(tmpPreset[idx + 1]["tooltip"]);
+        if (storagePreset[idx + 1]) {
+          $(this).val(storagePreset[idx + 1]["tooltip"]);
           $presetBtnElement.eq(idx).removeAttr("disabled");
           $presetBtnElement
             .eq(idx)
-            .attr("data-tooltip", tmpPreset[idx + 1]["tooltip"]);
+            .attr("data-tooltip", storagePreset[idx + 1]["tooltip"]);
         }
       });
     }
 
     // character
-    if (!$.isEmptyObject(tmpCharacter)) {
+    if (storageCharacter) {
       $("#step-1").hide();
-      if (currentPreset === -1) {
-        for (let i of tmpCharacter) {
-          if (i["stat"] == "ATT") {
-            if (i["selected"])
-              $(".div-character > .row").append(createCard(i, "mapleM", 1));
-            else $(".div-character > .row").append(createCard(i, "mapleM"));
-          } else {
-            if (i["selected"])
-              $(".div-character > .row").append(createCard(i, "selected"));
-            else $(".div-character > .row").append(createCard(i));
-          }
+      for (let i of storageCharacter) {
+        if (i["stat"] == "ATT") {
+          if (i["selected"])
+            $(".div-character > .row").append(createCard(i, "mapleM", 1));
+          else $(".div-character > .row").append(createCard(i, "mapleM"));
+        } else {
+          if (i["selected"])
+            $(".div-character > .row").append(createCard(i, "selected"));
+          else $(".div-character > .row").append(createCard(i));
         }
-      } else if (currentPreset !== -1) {
-        for (let i of tmpPreset[currentPreset]["character"]) {
-          if (i["stat"] == "ATT") {
-            if (i["selected"])
-              $(".div-character > .row").append(createCard(i, "mapleM", 1));
-            else $(".div-character > .row").append(createCard(i, "mapleM"));
-          } else {
-            if (i["selected"])
-              $(".div-character > .row").append(createCard(i, "selected"));
-            else $(".div-character > .row").append(createCard(i));
-          }
-        }
-        localStorageObj["character"] = _.cloneDeep(
-          tmpPreset[currentPreset]["character"]
-        );
       }
-    } else {
-      $("#step-2").hide();
     }
 
-    // LegionSolver
-    if (currentPreset === -1) {
-      legionSolver = _.cloneDeep(tmpLegionSolver);
-    } else {
-      legionSolver = _.cloneDeep(tmpPreset[currentPreset]["legionSolver"]);
-    }
+    // new legionSolver
+    if (storageLegionSolver) legionSolver = storageLegionSolver;
   }
 
   $("#union-cnt").html(`<b>${union["cnt"]} / ${union["members"]}</b>`);
@@ -504,7 +504,7 @@ function ajaxChar(arr) {
             characterList.push(characterObj);
           }
         }
-        if (!isKeyExist(data["union"], "unionError")) {
+        if (!isKeyExist(data["union"], "error")) {
           union["members"] = data["union"]["unionMembers"];
           union["level"] = data["union"]["unionlevel"];
           union["rank"] = data["union"]["unionRank"];
@@ -538,12 +538,8 @@ function ajaxChar(arr) {
       }
     },
     error: function (data) {
-      if (data["statusText"] === "timeout") {
-        alert("과부화 상태! 잠시 후 이용해주세요.");
-      } else {
-        console.log("error");
-        console.log(data);
-      }
+      console.log("error");
+      console.log(data);
 
       $("#step-1").show();
       $("#step-2").hide();
@@ -573,7 +569,10 @@ function createCard(res, arg1, arg2) {
       return (
         content +
         `
-                <div class="refresh"><i class="fa-solid fa-rotate"></i></div>
+                <div class="row justify-content-end g-0">
+                    <button class="col-2 refresh"><i class="fa-solid fa-rotate"></i></button>
+                    <button class="col-2 delete"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <div class="card-title">
                     <img src="./img/mapleM.png">
                     <h5><b>메이플스토리M</b></h5>
@@ -592,7 +591,10 @@ function createCard(res, arg1, arg2) {
       return `
         <div class="col-md-2">
             <div class="char-card selected" data-name="${res["name"]}" data-class="${res["class"]}" data-rank="${res["rank"]}" data-stat="${res["stat"]}" data-value="${res["value"]}">
-                <div class="refresh"><i class="fa-solid fa-rotate"></i></div>
+                <div class="row justify-content-end g-0">
+                    <button class="col-2 refresh"><i class="fa-solid fa-rotate"></i></button>
+                    <button class="col-2 delete"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <div class="card-title">
                     <img src="${res["avatarImg"]}">
                     <h5><b>${res["name"]}</b></h5>
@@ -610,7 +612,10 @@ function createCard(res, arg1, arg2) {
       return `
         <div class="col-md-2">
             <div class="char-card draw-border" data-name="${res["name"]}" data-class="${res["class"]}" data-rank="${res["rank"]}" data-stat="${res["stat"]}" data-value="${res["value"]}">
-                <div class="refresh"><i class="fa-solid fa-rotate"></i></div>  
+                <div class="row justify-content-end g-0">
+                    <button class="col-2 refresh"><i class="fa-solid fa-rotate"></i></button>
+                    <button class="col-2 delete"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <div class="card-title">
                     <img src="${res["avatarImg"]}">
                     <h5><b>${res["name"]}</b></h5>
@@ -789,26 +794,28 @@ function setSync(nameList, $elements) {
       contentType: "application/json",
       dataType: "json",
       success: function(result2) {
-        console.log(arg);
         inputUpdateCharacter(arg["success"], result2);
         setSort();
-        // for (let i in arg["success"]) {
-        //   let idx = localStorageObj["character"].findIndex((x) => x.name === arg["success"][i]);
-
-        //   localStorageObj["character"][idx] = _.cloneDeep(result2["charInfo"][i]);
-        // }
+        syncCharacters = syncCharacters.concat(arg["success"]);
+        syncCharacters = Array.from(new Set(syncCharacters));
         $elements.each(function () {
-          let name = $(this).data("name");
+          let $card = $(this).parent();
+          let name = $card.data("name");
 
           $(this).children().first().removeClass("fa-spin");
-          if (arg["success"].find((x) => x === name)) $(this).children().first().css("color", "green");
-          else if (arg["fail"].find((x) => x === name)) $(this).children().first().css("color", "red");
-          console.log($(this).children().first());
+          if (arg["success"].find((x) => x === name)) {
+            let charInfo = _.cloneDeep(result2["charInfo"].find((x) => x.name === name));
+
+            $card.data("class", charInfo.class); $card.data("rank", charInfo.rank); $card.data("stat", charInfo.stat); $card.data("value", charInfo.value);
+            $card.find(".card-title > img").attr("src", charInfo.avatarImg);
+            $card.find(".card-content > ul").children().eq(0).html(`${charInfo.rank} / Lv. ${charInfo.level}`);
+            $card.find(".card-content > ul").children().eq(1).html(charInfo.job);
+            $card.find(".card-content > ul").children().eq(2).html(charInfo.effect);
+
+            $(this).children().first().css("color", "green");
+          } else if (arg["fail"].find((x) => x === name)) $(this).children().first().css("color", "red");
         });
         localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
-        $(".div-character > .row").html("");
-        createCardN();
-        // location.reload();
       }                                               
     });
   });
@@ -845,12 +852,23 @@ function createCardN() {
 function inputUpdateCharacter (successList, data) {
   for (let i in successList) {
     let idx = localStorageObj["character"].findIndex((x) => x.name === successList[i]);
+    let selected = localStorageObj["character"][idx]["selected"];
 
     localStorageObj["character"][idx] = _.cloneDeep(data["charInfo"][i]);
+    localStorageObj["character"][idx]["selected"] = selected;
   }
+  for (let i of localStorageObj["preset"]) {
+    if(!i) continue;
+    for (let j in successList) {
+      let idx = i["character"].findIndex((x) => x.name === successList[j]);
 
-  if (localStorageObj.currentPreset !== -1)
-    localStorageObj["preset"][localStorageObj.currentPreset]["character"] = _.cloneDeep(localStorageObj["character"]);
+      if (idx > 0 ? true : false) {
+        let selected = i["character"][idx]["selected"];
+        i["character"][idx] = _.cloneDeep(data["charInfo"][j]);
+        i["character"][idx]["selected"] = selected;
+      }
+    }
+  }
 }
 
 function setSort(){
@@ -862,5 +880,49 @@ function setSort(){
   })
 
   localStorageObj["character"] = _.cloneDeep(sortedCharacters);
-  console.log(localStorageObj);
+}
+
+function removeCard(target, name){
+  let characters = _.cloneDeep(localStorageObj["character"]);
+  let idx = characters.findIndex((x) => x.name === name);
+  
+  characters.splice(idx, 1);
+  localStorageObj["character"] = _.cloneDeep(characters);
+  console.log(characters); 
+  localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
+  target.remove();
+}
+
+function syncDisableFunc() {
+  let $element = $("#btn-sync");
+
+  if (syncInterval === 0) {
+    $element.removeAttr("disabled");
+    $element.html("갱신");
+    syncInterval = 20;
+    clearInterval(testInterval);
+  } else {
+    syncInterval -= 1;
+    $element.html(`갱신..(${syncInterval})`);
+  }
+}
+
+function setSyncDisable() {
+  let $element = $("#btn-sync");
+
+  $element.attr("disabled", true);
+  $element.html(`갱신..(${syncInterval})`);
+  testInterval = setInterval(syncDisableFunc, 1000);
+}
+
+function setRefreshDisalbe(target) {
+  target.attr("disabled", true);
+
+  setTimeout((target) => {
+    target.removeAttr("disabled");
+  }, 20000 ,target);
+}
+
+function getIndex(arr, data) {
+  return arr.findIndex((x) => x[data] === data);
 }

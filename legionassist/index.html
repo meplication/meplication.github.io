@@ -134,7 +134,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" id="btn-modal-preset" class="btn btn-primary">추가</button>
+                        <button type="button" id="btn-modal-preset" class="btn btn-primary">저장</button>
                     </div>
                 </div>
             </div>
@@ -149,30 +149,54 @@
         <div id="step-1" class="container py-3">
             <div class="row">
                 <div id="L" class="col-md-10">
+                    <h3>사용법</h3>
                     <ol style="line-height: 2.5;">
-                        <li>메이플스토리 홈페이지에 로그인 해줍니다.</li>
+                        <li><a href="https://maplestory.nexon.com/Home/Main">메이플스토리</a> 홈페이지에 로그인 해줍니다.</li>
                         <li>'마이메이플' > '대표캐릭터 변경' 순으로 들어갑니다.<br>
                             <div><img src="./img/1.png" /></div>
                         </li>
-                        <li>서버를 선택후 <span class="text-black-50">(메이플ID 이용중이면 메이플ID까지 선택후 )</span> <kbd>ctrl + A</kbd> 후 <kbd>ctrl + C</kbd>를 눌러주세요.<br>
-                            <div><img src="./img/2.png" /></div>
+                        <li>서버를 선택후 <span class="text-black-50">(메이플ID 이용중이면 메이플ID까지 선택후 )</span> 전체선택( <kbd>ctrl</kbd> + <kbd>A</kbd> ) 후 복사 ( <kbd>ctrl</kbd> + <kbd>C</kbd> )를 눌러주세요.<br>
+                            <div><img src="./img/2.gif" /></div>
                         </li>
-                        <li>오른쪽 입력창에서 <kbd>ctrl + V</kbd>후 <button class="btn btn-outline-primary btn-sm">가져오기</button>를 눌러주세요.<br>
-                            메이플스토리 공식홈페이지에서 가져오는거라 캐릭터가 많을수록 시간이 오래 걸립니다. (46캐릭기준 26초)
+                        <li>오른쪽 입력창에서 붙여넣기( <kbd>ctrl</kbd> + <kbd>V</kbd> )후 <button class="btn btn-outline-primary btn-sm">가져오기</button>를 눌러주세요.<br>
+                            <div><img src="./img/3.gif" /></div>
                         </li>
-                        <li>메이플스토리M 캐릭터를 추가하실려면 <button class="btn btn-outline-primary btn-sm">메이플M 추가</button>를 눌러주세요.<br>
-                            메이플캐릭터를 추가하실려면 <button class="btn btn-outline-primary btn-sm">캐릭터 추가</button>를 눌러주세요.<br>
-                            프리셋 저장은 각 프리셋에 대한 메모와 함계 저장가능합니다.
-                            <div><img src="./img/3.png" /></div>
+                        <li>메이플스토리M 캐릭터가 있을경우 <button class="btn btn-outline-primary btn-sm">메이플M 추가</button>를 눌러 추가해주세요.<br>
+                            추가로 메이플캐릭터를 추가하실려면 <button class="btn btn-outline-primary btn-sm">캐릭터 추가</button>를 눌러주세요.<br>
                         </li>
-                        <li>LegionSolver를 이용하실려면 <button class="btn btn-outline-warning btn-sm">코드 생성</button>를 눌러주세요.</li>
-                        <li>LegionSolver에 접속후 <kbd>F12</kbd>를 눌러주세요.<br>
-                            <div><img src="./img/4.png" /></div>
+                        <li>캐릭터를 누르시면 선택됩니다. 공격대에 배치를 원하는 캐릭터를 선택해주시면 됩니다.
+                            <div><img src="./img/4.gif" /></div>
                         </li>
-                        <li>오른쪽에 'Console'<span class="text-black-50">(혹은 '콘솔')</span>탭에 가서 <kbd>Ctrl + C</kbd>후 <kbd>Enter</kbd>를 눌러주세요.<br>
-                            <div><img src="./img/5.png" /></div>
+                        <li>캐릭터 선택을 다 하셨으면 <button class="btn btn-outline-warning btn-sm">코드 생성</button>를 눌러주세요.
+                            <div><img src="./img/5.gif" /></div>
+                        </li>
+                        <li>LegionSolver에 접속후 <kbd>F12</kbd>를 눌러주세요.</li>
+                        <li>오른쪽에 'Console'<span class="text-black-50">(혹은 '콘솔')</span>탭에 가서 붙여넣기( <kbd>Ctrl</kbd> + <kbd>V</kbd> )후 <kbd>Enter</kbd>를 눌러주세요.<br>
+                            <div><img src="./img/6.gif" /></div>
                         </li>
                     </ol>
+                    <h3>기능 설명</h3>
+                    <ul style="line-height: 2.5;">
+                        <li>캐릭터 정보가 다른경우 <button class="btn btn-outline-primary btn-sm">갱신</button>를 눌러주세요.<br>
+                            갱신이 안된 캐릭터가 있을경우 다시 개별적으로 <span><i class="fa-solid fa-rotate"></i></span> 눌러도 갱신됩니다.<br>
+                            <span style="color: green;"><i class="fa-solid fa-rotate"></i></span> : 갱신 성공 | <span style="color: red;"><i class="fa-solid fa-rotate"></i></span> : 갱신 실패
+                            <div>전체갱신<br><img src="./img/7.gif" /></div>
+                            <div>특정 캐릭터 갱신<br><img src="./img/8.gif" /></div>
+                            <div></div>
+                        </li>
+                        <li>캐릭터를 삭제하고 싶으시면 <span><i class="fa-solid fa-xmark"></i></span>를 눌러주세요.
+                            <div><img src="./img/9.gif" /></div>
+                        </li>
+                        <li><button class="btn btn-outline-primary btn-sm">프리셋 저장</button>은 각 프리셋에 대한 메모와 함께 저장가능합니다.
+                            <div><img src="./img/10.gif" /></div>
+                        </li>
+                        <li>프리셋 번호에 마우스를 가져가면 프리셋 메모가 보입니다.
+                            <div><img src="./img/11.gif" /></div>
+                        </li>
+                        <li>프리셋 번호를 클릭하면 프리셋를 변경할 수 있습니다.
+                            <div><img src="./img/12.gif" /></div>
+                        </li>
+                    </ul>
                 </div>
                 <div id="R" class="col-md-2">
                     <textarea id="input"></textarea>
@@ -335,7 +359,6 @@
             <!-- 캐릭터 선택 -->
             <div class="div-character">
                 <div class="row">
-                </div>
             </div>
         </div>
     </main>
