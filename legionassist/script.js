@@ -476,57 +476,34 @@ function ajaxChar(arr) {
     async: true,
     success: function (data) {
       try {
-        let characterList = [];
+        let characterList = [],
+          charactersLength,
+          unionLevel = 0;
 
         if (isKeyExist(localStorageObj, "character"))
           characterList = _.cloneDeep(localStorageObj["character"]);
         for (let i of data["charInfo"]) {
-          if (isKeyExist(i, "searchError")) continue;
-
           let characterObj = {};
 
           if (!isValueExist(characterList, i["name"], "name")) {
             $(".div-character > .row").append(createCard(i));
 
-            // localStorage
-            characterObj = {
-              name: i["name"],
-              class: i["class"],
-              rank: i["rank"],
-              stat: i["stat"],
-              value: i["value"],
-              effect: i["effect"],
-              avatarImg: i["avatarImg"],
-              level: i["level"],
-              job: i["job"],
-              selected: 0,
-            };
+            characterObj = _.cloneDeep(i);
+            characterObj["selected"] = 0;
             characterList.push(characterObj);
           }
         }
-        if (!isKeyExist(data["union"], "error")) {
-          union["members"] = data["union"]["unionMembers"];
-          union["level"] = data["union"]["unionlevel"];
-          union["rank"] = data["union"]["unionRank"];
-
-          // localStorage
-          let unionObj = {
-            members: union["members"],
-            level: union["level"],
-            rank: union["rank"],
-          };
-
-          if (!localStorageObj["cnt"]) {
-            unionObj["cnt"] = 0;
-          }
-
-          setUnionInfo();
-
-          localStorageObj["union"] = _.cloneDeep(unionObj);
+        charactersLength = characterList.length > 42 ? 42 : characterList.length;
+        for (let i = 0; i < charactersLength; i++) {
+          unionLevel += Number(characterList[i].level);
         }
+        
+        inputUnionRank(unionLevel);
+        setUnionInfo();
 
         // localStorage
-        localStorageObj["character"] = characterList;
+        localStorageObj["character"] = _.cloneDeep(characterList);
+        localStorageObj["union"] = _.cloneDeep(union);
         localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
 
         $("#union-cnt").html(`<b>${union["cnt"]} / ${union["members"]}</b>`);
@@ -857,15 +834,17 @@ function inputUpdateCharacter (successList, data) {
     localStorageObj["character"][idx] = _.cloneDeep(data["charInfo"][i]);
     localStorageObj["character"][idx]["selected"] = selected;
   }
-  for (let i of localStorageObj["preset"]) {
-    if(!i) continue;
-    for (let j in successList) {
-      let idx = i["character"].findIndex((x) => x.name === successList[j]);
+  if (isKeyExist(localStorageObj, "preset")) {
+    for (let i of localStorageObj["preset"]) {
+      if(!i) continue;
+      for (let j in successList) {
+        let idx = i["character"].findIndex((x) => x.name === successList[j]);
 
-      if (idx > 0 ? true : false) {
-        let selected = i["character"][idx]["selected"];
-        i["character"][idx] = _.cloneDeep(data["charInfo"][j]);
-        i["character"][idx]["selected"] = selected;
+        if (idx > 0 ? true : false) {
+          let selected = i["character"][idx]["selected"];
+          i["character"][idx] = _.cloneDeep(data["charInfo"][j]);
+          i["character"][idx]["selected"] = selected;
+        }
       }
     }
   }
@@ -925,4 +904,35 @@ function setRefreshDisalbe(target) {
 
 function getIndex(arr, data) {
   return arr.findIndex((x) => x[data] === data);
+}
+
+function inputUnionRank(unionLevel) {
+  let unionRank = ['노비스', '베테랑', '마스터', '그랜드 마스터', '슈프림'],
+    rankMembers = [9, 18, 27, 36, 41],
+    unionTier = ['I', 'II', 'III', 'IV', 'V'],
+    tierMembers = [0, 1, 2, 3, 4];
+
+  if (unionLevel < 3000) {
+      if (unionLevel <= 500) {
+          union['rank'] = unionRank[0] + ' ' + unionTier[0];
+          union['members'] = rankMembers[0] + tierMembers[0];
+      } else {
+          union['rank'] = unionRank[0] + ' ' + unionTier[parseInt(unionLevel / 500) - 1];
+          union['members'] = rankMembers[0] + tierMembers[parseInt(unionLevel / 500) - 1];
+      }
+  } else if (unionLevel < 5500) {
+      union['rank'] = unionRank[1] + ' ' + unionTier[parseInt((unionLevel - 3000) / 500)];
+      union['members'] = rankMembers[1] + tierMembers[parseInt((unionLevel - 3000) / 500)];
+  } else if (unionLevel < 8000) {
+      union['rank'] = unionRank[2] + ' ' + unionTier[parseInt((unionLevel - 5500) / 500)];
+      union['members'] = rankMembers[2] + tierMembers[parseInt((unionLevel - 5500) / 500)];
+  } else if (unionLevel < 10500) {
+      union['rank'] = unionRank[3] + ' ' + unionTier[parseInt((unionLevel - 8000) / 500)];
+      union['members'] = rankMembers[3] + tierMembers[parseInt((unionLevel - 8000) / 500)];
+  } else if (unionLevel >= 10500) {
+      union['rank'] = unionRank[4] + ' ' + unionTier[parseInt((unionLevel - 10500) / 500)];
+      union['members'] = rankMembers[4] + tierMembers[inparseIntt((unionLevel - 10500) / 500)];
+  }
+  
+  union['level'] = unionLevel
 }
