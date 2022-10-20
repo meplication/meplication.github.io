@@ -14,4 +14,14 @@ export const weeklyContentList = [
     icon: "./img/wContent/sulo.png",
     title: "길드 컨텐츠: 지하 수로",
   },
+  {
+    id: "fallenWorldTree",
+    icon: "./img/wContent/fallenWorldTree.png",
+    title: "타락한 세계수 주간 임무",
+  },
+  {
+    id: "mechanicalGrave",
+    icon: "./img/wContent/mechanicalGrave.png",
+    title: "헤이븐 주간 임무",
+  },
 ];

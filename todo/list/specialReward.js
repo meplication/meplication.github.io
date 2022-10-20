@@ -13,4 +13,11 @@ export const specialRewardList = [
     startDate: "202210061000",
     endDate: "202210192359",
   },
+  {
+    id: "jinTheAstronaut_2022",
+    icon: "./img/specialReward/extreme.png",
+    title: "진 첫 솔로곡 발매 기념",
+    startDate: "202210281300",
+    endDate: "202211102359",
+  },
 ];
