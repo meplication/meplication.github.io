@@ -34,7 +34,7 @@ $(function () {
                 i[j][k]["isClear"] = 0;
               }
             }
-          } else if (j.indexOf("monthly") < 0 ? false : true) {
+          } else if (j.indexOf("monthly") < 0 ? false : true && j !== "monthlyEvent") {
             if (now.getMonth() !== t.getMonth()) {
               for (let k in i[j]) {
                 i[j][k]["isClear"] = 0;
@@ -60,14 +60,15 @@ $(function () {
 import { specialRewardList } from "./list/specialReward.js";
 import { dailyEventList } from "./list/dailyEvent.js";
 import { weeklyEventList } from "./list/weeklyEvent.js";
+import { monthlyEventList } from "./list/monthlyEvent.js";
 import { dailyContentList } from "./list/dailyContent.js";
 import { dailyBossList } from "./list/dailyBoss.js";
 import { dailySymbolList } from "./list/dailySymbol.js";
 import { weeklyContentList } from "./list/weeklyContent.js";
 import { weeklyBossList } from "./list/weeklyBoss.js";
 import { monthlyBossList } from "./list/monthlyBoss.js";
-const arrList = [specialRewardList, dailyEventList, weeklyEventList, dailyContentList, dailyBossList, dailySymbolList, weeklyContentList, weeklyBossList, monthlyBossList],
-  arrNameList = ["specialReward", "dailyEvent", "weeklyEvent", "dailyContent", "dailyBoss", "dailySymbol", "weeklyContent", "weeklyBoss", "monthlyBoss"];
+const arrList = [specialRewardList, dailyEventList, weeklyEventList, monthlyEventList, dailyContentList, dailyBossList, dailySymbolList, weeklyContentList, weeklyBossList, monthlyBossList],
+  arrNameList = ["specialReward", "dailyEvent", "weeklyEvent", "monthlyEvent", "dailyContent", "dailyBoss", "dailySymbol", "weeklyContent", "weeklyBoss", "monthlyBoss"];
 const isIOS = navigator.userAgent.match(/iPad/i)|| navigator.userAgent.match(/iPhone/i);
 const eventName = isIOS ? "pagehide" : "beforeunload";
 var localStorageObj = {
@@ -272,10 +273,14 @@ function createTodo(data, target, idx) {
     if (!getHiddenState(target, data[i].id)) {
       if (startDate !== undefined) {
         startDate = getDatebyString(startDate);
-        if(isPast(new Date(startDate.year, startDate.month-1, startDate.day, startDate.hour, startDate.min)))
-          $("#" + target + "-body").append(getTodoContent(data[i], getClearStatus(target, data[i].id), false));
-        else
-          $("#" + target + "-body").append(getTodoContent(data[i], getClearStatus(target, data[i].id), true));
+        if(isPast(new Date(startDate.year, startDate.month-1, startDate.day, startDate.hour, startDate.min))) {
+          if (getDiffDate(endDate) < 1)
+            $("#" + target + "-body").append(getTodoContent(data[i], getClearStatus(target, data[i].id), false, true));
+          else
+            $("#" + target + "-body").append(getTodoContent(data[i], getClearStatus(target, data[i].id), false));
+        }
+        else {
+          $("#" + target + "-body").append(getTodoContent(data[i], getClearStatus(target, data[i].id), true));}
       } else {
         $("#" + target + "-body").append(getTodoContent(data[i], getClearStatus(target, data[i].id), false));
       }
@@ -304,7 +309,7 @@ function removeTodo() {
   }
 }
 
-function getTodoContent(data, isClear, isOpen) {
+function getTodoContent(data, isClear, isClose, isDanger = false) {
   if (isClear) {
     return `
       <div class="p-3 pt-0 col-12 col-lg-6 col-xxl-4">
@@ -317,7 +322,7 @@ function getTodoContent(data, isClear, isOpen) {
       </div>
     `;
   } else {
-    if (isOpen) {
+    if (isClose) {
       return `
         <div class="p-3 pt-0 col-12 col-lg-6 col-xxl-4 form-floating">
           <div class="coming-soon">COMING SOON</div>
@@ -331,16 +336,28 @@ function getTodoContent(data, isClear, isOpen) {
         </div>
       `;
     } else {
-      return `
-        <div class="p-3 pt-0 col-12 col-lg-6 col-xxl-4">
-          <div id="${data["id"]}" class="row bg-light text-center align-items-center content-body">
-              <div class="col-2"><img src="${data["icon"]}"></div>
-              <div class="col-8"><div>${data["title"]}</div><div class="end-date">${getEndDate(data["endDate"])}</div></div>
-              <div class="col-2"><div class="circle-red"></div>
-              </div>
+      if(isDanger)
+        return `
+          <div class="p-3 pt-0 col-12 col-lg-6 col-xxl-4">
+            <div id="${data["id"]}" class="row bg-light text-center align-items-center content-body">
+                <div class="col-2"><img src="${data["icon"]}"></div>
+                <div class="col-8"><div>${data["title"]}</div><div class="end-date text-danger">${getEndDate(data["endDate"])}</div></div>
+                <div class="col-2"><div class="circle-red"></div>
+                </div>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      else
+        return `
+          <div class="p-3 pt-0 col-12 col-lg-6 col-xxl-4">
+            <div id="${data["id"]}" class="row bg-light text-center align-items-center content-body">
+                <div class="col-2"><img src="${data["icon"]}"></div>
+                <div class="col-8"><div>${data["title"]}</div><div class="end-date">${getEndDate(data["endDate"])}</div></div>
+                <div class="col-2"><div class="circle-red"></div>
+                </div>
+            </div>
+          </div>
+        `;
     }
   }
 }
@@ -487,6 +504,14 @@ function isPast(date) {
   let now = new Date();
 
   return now.getTime() > date.getTime() ? true : false;
+}
+
+function getDiffDate(date) {
+  let now = new Date();
+  let diffDate = date.getTime() - now.getTime();
+  let _day = 1000 * 60 * 60 * 24;
+
+  return parseInt(diffDate / _day);
 }
 
 setInterval(function () {
