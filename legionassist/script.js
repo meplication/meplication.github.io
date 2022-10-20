@@ -482,6 +482,7 @@ function ajaxChar(arr) {
 
         if (isKeyExist(localStorageObj, "character"))
           characterList = _.cloneDeep(localStorageObj["character"]);
+          
         for (let i of data["charInfo"]) {
           let characterObj = {};
 
@@ -493,18 +494,18 @@ function ajaxChar(arr) {
             characterList.push(characterObj);
           }
         }
-        charactersLength = characterList.length > 42 ? 42 : characterList.length;
-        for (let i = 0; i < charactersLength; i++) {
-          unionLevel += Number(characterList[i].level);
-        }
+        // charactersLength = characterList.length > 42 ? 42 : characterList.length;
+        // for (let i = 0; i < charactersLength; i++) {
+        //   unionLevel += Number(characterList[i].level);
+        // }
         
-        inputUnionRank(unionLevel);
-        setUnionInfo();
-
         // localStorage
         localStorageObj["character"] = _.cloneDeep(characterList);
-        localStorageObj["union"] = _.cloneDeep(union);
+        // localStorageObj["union"] = _.cloneDeep(union);
         localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
+
+        setUnion();
+        setUnionInfo();
 
         $("#union-cnt").html(`<b>${union["cnt"]} / ${union["members"]}</b>`);
       } catch (e) {
@@ -773,6 +774,8 @@ function setSync(nameList, $elements) {
       success: function(result2) {
         inputUpdateCharacter(arg["success"], result2);
         setSort();
+        setUnion();
+        setUnionInfo();
         syncCharacters = syncCharacters.concat(arg["success"]);
         syncCharacters = Array.from(new Set(syncCharacters));
         $elements.each(function () {
@@ -792,6 +795,8 @@ function setSync(nameList, $elements) {
             $(this).children().first().css("color", "green");
           } else if (arg["fail"].find((x) => x === name)) $(this).children().first().css("color", "red");
         });
+
+        // localStorage
         localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
       }                                               
     });
@@ -906,33 +911,81 @@ function getIndex(arr, data) {
   return arr.findIndex((x) => x[data] === data);
 }
 
-function inputUnionRank(unionLevel) {
+function setUnion() {
+  let characterList = _.cloneDeep(localStorageObj["character"]),
+    unionLevel = 0,
+    charactersLength,
+    tmpCnt = 0;
+
+  charactersLength = characterList.length > 42 ? 42 : characterList.length;
+  for (let i of characterList) {
+    if(i.class !== "mapleM" && charactersLength >= 0) {
+      unionLevel += Number(i.level);
+      charactersLength -= 1;
+    }
+  }
+  if (isKeyExist(localStorageObj, "union")) tmpCnt = localStorageObj["union"].cnt;
+  localStorageObj["union"] = _.cloneDeep(getUnionInfo(unionLevel));
+  localStorageObj["union"]["cnt"] = tmpCnt;
+  tmpCnt = 0;
+
+  // 
+  union["rank"] = localStorageObj["union"]["rank"];
+  union["members"] = localStorageObj["union"]["members"];
+  union["level"] = localStorageObj["union"]["level"];
+
+  if (isKeyExist(localStorageObj, "preset")) {
+    for (let i of localStorageObj["preset"]) {
+      if(!i) continue;
+      characterList = _.cloneDeep(i["character"])
+      unionLevel = 0;
+      charactersLength = characterList.length > 42 ? 42 : characterList.length;
+      for (let j of characterList) {
+        if(j.class !== "mapleM" && charactersLength >= 0) {
+          unionLevel += Number(j.level);
+          charactersLength -= 1;
+        }
+      }
+      if (isKeyExist(i, "union")) tmpCnt = i["union"].cnt;
+      i["union"] = _.cloneDeep(getUnionInfo(unionLevel));
+      i["union"]["cnt"] = tmpCnt;
+      tmpCnt = 0;
+    }
+  }
+
+  // localStorage
+  localStorage.setItem("legionAssist", JSON.stringify(localStorageObj));
+}
+
+function getUnionInfo(unionLevel) {
   let unionRank = ['노비스', '베테랑', '마스터', '그랜드 마스터', '슈프림'],
     rankMembers = [9, 18, 27, 36, 41],
     unionTier = ['I', 'II', 'III', 'IV', 'V'],
-    tierMembers = [0, 1, 2, 3, 4];
+    tierMembers = [0, 1, 2, 3, 4],
+    unionObj = {};
 
-  if (unionLevel < 3000) {
+    if (unionLevel < 3000) {
       if (unionLevel <= 500) {
-          union['rank'] = unionRank[0] + ' ' + unionTier[0];
-          union['members'] = rankMembers[0] + tierMembers[0];
+        unionObj['rank'] = unionRank[0] + ' ' + unionTier[0];
+        unionObj['members'] = rankMembers[0] + tierMembers[0];
       } else {
-          union['rank'] = unionRank[0] + ' ' + unionTier[parseInt(unionLevel / 500) - 1];
-          union['members'] = rankMembers[0] + tierMembers[parseInt(unionLevel / 500) - 1];
+        unionObj['rank'] = unionRank[0] + ' ' + unionTier[parseInt(unionLevel / 500) - 1];
+        unionObj['members'] = rankMembers[0] + tierMembers[parseInt(unionLevel / 500) - 1];
       }
-  } else if (unionLevel < 5500) {
-      union['rank'] = unionRank[1] + ' ' + unionTier[parseInt((unionLevel - 3000) / 500)];
-      union['members'] = rankMembers[1] + tierMembers[parseInt((unionLevel - 3000) / 500)];
-  } else if (unionLevel < 8000) {
-      union['rank'] = unionRank[2] + ' ' + unionTier[parseInt((unionLevel - 5500) / 500)];
-      union['members'] = rankMembers[2] + tierMembers[parseInt((unionLevel - 5500) / 500)];
-  } else if (unionLevel < 10500) {
-      union['rank'] = unionRank[3] + ' ' + unionTier[parseInt((unionLevel - 8000) / 500)];
-      union['members'] = rankMembers[3] + tierMembers[parseInt((unionLevel - 8000) / 500)];
-  } else if (unionLevel >= 10500) {
-      union['rank'] = unionRank[4] + ' ' + unionTier[parseInt((unionLevel - 10500) / 500)];
-      union['members'] = rankMembers[4] + tierMembers[inparseIntt((unionLevel - 10500) / 500)];
-  }
-  
-  union['level'] = unionLevel
+    } else if (unionLevel < 5500) {
+      unionObj['rank'] = unionRank[1] + ' ' + unionTier[parseInt((unionLevel - 3000) / 500)];
+      unionObj['members'] = rankMembers[1] + tierMembers[parseInt((unionLevel - 3000) / 500)];
+    } else if (unionLevel < 8000) {
+      unionObj['rank'] = unionRank[2] + ' ' + unionTier[parseInt((unionLevel - 5500) / 500)];
+      unionObj['members'] = rankMembers[2] + tierMembers[parseInt((unionLevel - 5500) / 500)];
+    } else if (unionLevel < 10500) {
+      unionObj['rank'] = unionRank[3] + ' ' + unionTier[parseInt((unionLevel - 8000) / 500)];
+      unionObj['members'] = rankMembers[3] + tierMembers[parseInt((unionLevel - 8000) / 500)];
+    } else if (unionLevel >= 10500) {
+      unionObj['rank'] = unionRank[4] + ' ' + unionTier[parseInt((unionLevel - 10500) / 500)];
+      unionObj['members'] = rankMembers[4] + tierMembers[inparseIntt((unionLevel - 10500) / 500)];
+    }
+    unionObj['level'] = unionLevel;
+
+    return unionObj;
 }
