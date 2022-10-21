@@ -20,4 +20,11 @@ export const specialRewardList = [
     startDate: "202210281300",
     endDate: "202211102359",
   },
+  {
+    id: "sundaymaple_20221023",
+    icon: "./img/specialReward/momong.png",
+    title: "썬데이 메이플",
+    startDate: "202210230000",
+    endDate: "202210232359",
+  },
 ];
