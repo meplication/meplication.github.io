@@ -13,4 +13,11 @@ export const weeklyEventList = [
     startDate: "202209291000",
     endDate: "202210262359",
   },
+  {
+    id: "dreamExpressOct_2022",
+    icon: "./img/wEvent/ladyBlair.png",
+    title: "레이디블레어의 드림 익스프레스",
+    startDate: "202210281000",
+    endDate: "202211011000",
+  },
 ];

@@ -28,6 +28,13 @@ export let dailyEventList = [
     endDate: "202211092359",
   },
   {
+    id: "halloween_2022",
+    icon: "./img/dEvent/hallowCat.png",
+    title: "[할로윈] 스푸키 할로윈!",
+    startDate: "202210270800",
+    endDate: "202211022359",
+  },
+  {
     id: "secretVault_2022",
     icon: "./img/dEvent/secretVault.png",
     title: "골드리치의 비밀금고",
