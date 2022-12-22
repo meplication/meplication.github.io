@@ -22,14 +22,14 @@ $(function () {
                 i[j][k]["isClear"] = 0;
               }
             }
-          } else if (j.indexOf("weekly") < 0 ? false : true && j !== "weeklyContent") {
-            if (now.getDay() === 4) {
+          } else if (j === "weeklyContent" || j === "weeklySymbol") {
+            if (now.getDay() === 1) {
               for (let k in i[j]) {
                 i[j][k]["isClear"] = 0;
               }
             }
-          } else if (j === "weeklyContent") {
-            if (now.getDay() === 1) {
+          } else if (j.indexOf("weekly") < 0 ? false : true) {
+            if (now.getDay() === 4) {
               for (let k in i[j]) {
                 i[j][k]["isClear"] = 0;
               }
@@ -64,11 +64,12 @@ import { monthlyEventList } from "./list/monthlyEvent.js";
 import { dailyContentList } from "./list/dailyContent.js";
 import { dailyBossList } from "./list/dailyBoss.js";
 import { dailySymbolList } from "./list/dailySymbol.js";
+import { weeklySymbolList } from "./list/weeklySymbol.js";
 import { weeklyContentList } from "./list/weeklyContent.js";
 import { weeklyBossList } from "./list/weeklyBoss.js";
 import { monthlyBossList } from "./list/monthlyBoss.js";
-const arrList = [specialRewardList, dailyEventList, weeklyEventList, monthlyEventList, dailyContentList, dailyBossList, dailySymbolList, weeklyContentList, weeklyBossList, monthlyBossList],
-  arrNameList = ["specialReward", "dailyEvent", "weeklyEvent", "monthlyEvent", "dailyContent", "dailyBoss", "dailySymbol", "weeklyContent", "weeklyBoss", "monthlyBoss"];
+const arrList = [specialRewardList, dailyEventList, weeklyEventList, monthlyEventList, dailyContentList, dailyBossList, dailySymbolList, weeklySymbolList, weeklyContentList, weeklyBossList, monthlyBossList],
+  arrNameList = ["specialReward", "dailyEvent", "weeklyEvent", "monthlyEvent", "dailyContent", "dailyBoss", "dailySymbol", "weeklySymbol", "weeklyContent", "weeklyBoss", "monthlyBoss"];
 const isIOS = navigator.userAgent.match(/iPad/i)|| navigator.userAgent.match(/iPhone/i);
 const eventName = isIOS ? "pagehide" : "beforeunload";
 var localStorageObj = {
@@ -241,7 +242,7 @@ function setCnt(target) {
 function setCharacterSelect(data) {
   $(".character-select").find("img").attr("src", data["avatarImg"]);
   $(".character-select").find(".character-name").html(data["name"]);
-  $(".character-select").find(".character-info").html(data["level"] + " " + data["job"]);
+  $(".character-select").find(".character-info").html("Lv." + data["level"] + " " + data["job"]);
 }
 
 function setTodoList() {
@@ -412,7 +413,7 @@ function getCharacterList(data) {
           <div class="col-7 col-lg-9 g-0">
               <div class="dividingLine-left">
                   <div class="character-name">${data["name"]}</div>
-                  <div class="character-info">${data["level"]} ${data["job"]}</div>
+                  <div class="character-info">Lv.${data["level"]} ${data["job"]}</div>
               </div>
           </div>
       </div>
