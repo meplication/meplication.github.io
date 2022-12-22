@@ -27,4 +27,11 @@ export const specialRewardList = [
     startDate: "202210230000",
     endDate: "202210232359",
   },
+  {
+    id: "saviorShowCase_2022",
+    icon: "./img/specialReward/extreme.png",
+    title: "SAVIOR 쇼케이스 선물",
+    startDate: "202212221000",
+    endDate: "202301042359",
+  },
 ];

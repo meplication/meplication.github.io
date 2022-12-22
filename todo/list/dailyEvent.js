@@ -48,4 +48,11 @@ export let dailyEventList = [
     startDate: "202211101000",
     endDate: "202211232359",
   },
+  {
+    id: "wonkyRestaurant_2022",
+    icon: "./img/dEvent/wonkyRestaurant.png",
+    title: "[웡스토랑] 웡스토랑",
+    startDate: "202212221000",
+    endDate: "202303012359",
+  },
 ];
