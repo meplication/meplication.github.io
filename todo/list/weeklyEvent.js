@@ -49,7 +49,7 @@ export const weeklyEventList = [
     endDate: "202301042359",
   },
   {
-    id: "togetherWeek_2022",
+    id: "miniGameWeek_2023",
     icon: "./img/wEvent/wonkyRestaurant_GD.png",
     title: "[웡스토랑] 껨디의 미니게임 위크",
     startDate: "202301051000",
