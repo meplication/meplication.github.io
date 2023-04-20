@@ -55,4 +55,32 @@ export let dailyEventList = [
     startDate: "202212221000",
     endDate: "202303012359",
   },
+  {
+    id: "goldenChariot_theFirstHalfOf2023",
+    icon: "./img/dEvent/goldenChariot.png",
+    title: "페어리 브로의 황금마차",
+    startDate: "202303021000",
+    endDate: "202306142359",
+  },
+  {
+    id: "20thMappleFiesta_2023",
+    icon: "./img/dEvent/20thMappleFiesta.png",
+    title: "[메이프릴]메이프릴 프에스타",
+    startDate: "202304201000",
+    endDate: "202305172359",
+  },
+  {
+    id: "20thMappleChallengers_2023",
+    icon: "./img/dEvent/20thMappleChallengers.png",
+    title: "[메이프릴]메이프릴 챌린저스",
+    startDate: "202304201000",
+    endDate: "202305172359",
+  },
+  {
+    id: "20thEventMemoria_2023",
+    icon: "./img/dEvent/20thEventMemoria.png",
+    title: "[메이프릴]메이프릴 메모리아",
+    startDate: "202304201000",
+    endDate: "202306072359",
+  },
 ];

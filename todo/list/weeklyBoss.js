@@ -99,4 +99,9 @@ export const weeklyBossList = [
     icon: "./img/wBoss/20.png",
     title: "감시자 칼로스",
   },
+  {
+    id: "wKaling",
+    icon: "./img/wBoss/21.png",
+    title: "카링",
+  },
 ];
