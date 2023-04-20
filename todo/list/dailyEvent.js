@@ -67,14 +67,21 @@ export let dailyEventList = [
     icon: "./img/dEvent/20thMappleFiesta.png",
     title: "[메이프릴]메이프릴 프에스타",
     startDate: "202304201000",
-    endDate: "202305172359",
+    endDate: "202306072359",
   },
   {
     id: "20thMappleChallengers_2023",
     icon: "./img/dEvent/20thMappleChallengers.png",
     title: "[메이프릴]메이프릴 챌린저스",
     startDate: "202304201000",
-    endDate: "202305172359",
+    endDate: "202306072359",
+  },
+  {
+    id: "20thMappleAdventure_2023",
+    icon: "./img/dEvent/EXPcoupon.png",
+    title: "[메이프릴]메이프릴 어드벤처",
+    startDate: "202304201000",
+    endDate: "202306072359",
   },
   {
     id: "20thEventMemoria_2023",
