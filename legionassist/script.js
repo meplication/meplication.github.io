@@ -36,6 +36,9 @@ var union = {
   syncInterval = 20;
 
 $(function () {
+  // notuse
+  $("#notuse-Modal").modal("show");
+  
   // 모바일접속 확인
   if (Mobile()) {
     $("#mobile-Modal").modal("show");
