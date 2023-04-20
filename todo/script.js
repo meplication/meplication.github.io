@@ -149,7 +149,8 @@ $(document).on("change", ".toggle-switchy", function () {
 });
 
 $(document).on("click", "#btn-character-add", function () {
-  $("#modal-characterAdd").modal("show");
+  // $("#modal-characterAdd").modal("show");
+  $("#modal-offline-characterAdd").modal("show");
 });
 
 $(document).on("shown.bs.modal", "#modal-characterAdd", function () {
@@ -157,7 +158,10 @@ $(document).on("shown.bs.modal", "#modal-characterAdd", function () {
 });
 
 $(document).on("click", "#btn-modal-other", function () {
-  let name = $("#other-char").val(),
+  // let name = $("#other-char").val(),
+  let name = $("#char-name").val(),
+    level = $("#char-level").val(),
+    job = $("#char-job").val(),
     res;
 
   if (name === "") {
@@ -169,7 +173,7 @@ $(document).on("click", "#btn-modal-other", function () {
     $("#other-char").focus();
     return;
   }
-  res = getCharacter(name);
+  res = getCharacter({name: name, level: level, job: job});
   if (Object.prototype.hasOwnProperty.call(res, "error")) {
     alert();
     $("#modal-characterAdd").modal("hide");
@@ -188,9 +192,12 @@ $(document).on("click", "#btn-modal-other", function () {
   $("#modal-characterList").find(".row").eq(0).append(getCharacterList(res));
   localStorage.setItem("todo", JSON.stringify(localStorageObj));
 
-  $("#other-char").val("");
+  // $("#other-char").val("");
+  $("#char-name").val("")
+  $("#char-level").val("")
+  $("#char-job").val("")
   $("#option").attr("disabled", false);
-  $("#modal-characterAdd").modal("hide");
+  $("#modal-offline-characterAdd").modal("hide");
 });
 
 $(document).on("click", "#btn-character-change", function () {
@@ -441,12 +448,12 @@ function getEndDate(data) {
   else return "";
 }
 
-function getCharacter(name) {
+function getCharacter(info) {
   let characterInfo;
 
   $.ajax({
     url: "https://meplication.koreacentral.cloudapp.azure.com/getCharacter",
-    data: JSON.stringify({ name: name }),
+    data: JSON.stringify({ name: info['name'] }),
     method: "POST",
     contentType: "application/json",
     dataType: "json",
@@ -457,8 +464,16 @@ function getCharacter(name) {
       characterInfo = data;
     },
     error: function (data) {
-      // console.log(data);
-      characterInfo = data;
+      console.log(data);
+      console.log(info);
+      
+      characterInfo = {
+        avatarImg: "img/default.svg",
+        name: info["name"],
+        level: info["level"],
+        job: info["job"]
+      };
+      console.log(characterInfo);
     },
   });
 

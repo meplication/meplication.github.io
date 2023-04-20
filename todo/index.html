@@ -48,6 +48,27 @@
 <body>
     <header></header>
     <main>
+        <!-- offline characterAdd modal -->
+        <div class="modal fade" id="modal-offline-characterAdd" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">캐릭터 추가</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="char-name" class="w-100 p-3" placeholder="닉네임 입력">
+                        <input type="text" id="char-level" class="w-100 p-3" placeholder="레벨 입력">
+                        <input type="text" id="char-job" class="w-100 p-3" placeholder="직업 입력">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" id="btn-modal-other" class="btn btn-primary">추가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- characterAdd modal -->
         <div class="modal fade" id="modal-characterAdd" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
